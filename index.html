@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Gamifire</title>
+  <style>
+    #taskListBox {
+      border: 1px solid;
+      width: 200px;
+      height: 300px;
+      overflow: auto;
+    }
+    .task {
+      background: #f0e0e0
+    }
+    .task:nth-child(odd) {
+      background: #fff1f1;
+    }
+  </style>
+</head>
+<body>
+  <form>
+    <input type="text" id="login">
+    <input type="password" id="pass">
+    <button id="loginBtn">Log in</button>
+    <button id="logoutBtn">Log out</button>
+    <button id="askPrivData">Ask private data</button>
+    <span id="informer"></span>
+  </form>
+  <button id="addTask">Add task</button>
+  <div id="taskListBox">
+    <div id="taskList">
+      <div class="task">Task One</div>
+      <div class="task">Task Two</div>
+      <div class="task">Task Three</div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>

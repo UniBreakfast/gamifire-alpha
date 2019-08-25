@@ -10,10 +10,18 @@ module.exports = require('express').Router()
     try {
       const userFound = await User.findOne({ mail }),
             correct = await bcrypt.compare(pass, (userFound).pass)
-      res.send(correct? jwt.sign({id: userFound.id}, process.env.SECRET) : false)
+      if (correct) return res.send({
+        token: jwt.sign({id: userFound.id}, process.env.SECRET),
+        name: userFound.name
+      })
+      res.send('false')
     }
     catch (err) { res.status(401).send(err.message) } })
-  .get('/data', (req, res) => {
-    try { res.send(jwt.verify(req.header('auth-token'), process.env.SECRET)) } 
+  .post('/data', async (req, res) => {
+    try { 
+      const _id = jwt.verify(req.header('auth-token'), process.env.SECRET).id,
+            name = (await User.findOne({_id})).name
+      res.send(name)
+    } 
     catch (err) { res.send(err) } })
   
