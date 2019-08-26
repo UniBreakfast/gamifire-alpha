@@ -1,6 +1,7 @@
 if (localStorage.token && localStorage.name) {
   loginBtn.disabled = true
   informer.innerText = `Hi, ${localStorage.name}`
+  getTasks()
 } else {
   logoutBtn.disabled = true
   informer.innerText = `Hello, guest`
@@ -18,9 +19,9 @@ loginBtn.onclick = async function(e) {
   answer = JSON.parse(answer)
   localStorage.token = answer.token
   informer.innerText = `Hi, ${localStorage.name = answer.name}`
+  getTasks()
   loginBtn.disabled = true
   logoutBtn.disabled = false
-  console.log(answer.name)
 }
 
 logoutBtn.onclick = function(e) {
@@ -30,6 +31,7 @@ logoutBtn.onclick = function(e) {
   setTimeout(() => informer.innerText = `And who are you?`)
   loginBtn.disabled = false
   logoutBtn.disabled = true
+  taskList.innerHTML = ''
 }
 
 askPrivData.onclick = async function(e) {
@@ -39,4 +41,27 @@ askPrivData.onclick = async function(e) {
     method: 'POST',
     headers: {"auth-token": localStorage.token}
   })).text())
+}
+
+addTask.onclick = function() {
+  fetch("http://localhost:3000/api/addtask", {
+    method: 'POST',
+    headers: {
+      "auth-token": localStorage.token,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ task: taskToAdd.value })
+  })
+  taskList.innerHTML += `<div class="task">${taskToAdd.value}</div>`
+}
+
+taskToAdd.onkeydown = e => {
+  if (e.which == 13) addTask.onclick()
+}
+
+async function getTasks() {
+  taskList.innerHTML = (await (await fetch("http://localhost:3000/api/tasks", {
+    method: 'GET',
+    headers: { "auth-token": localStorage.token }
+  })).json()).reduce((html, {task}) => html + `<div class="task">${task}</div>`, '')
 }

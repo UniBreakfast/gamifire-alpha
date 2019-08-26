@@ -9,5 +9,6 @@ express().use(require('body-parser').json())
   .use(express.static(__dirname))
   .use(require('body-parser').urlencoded( {extended: true} ))
   .use('/api/user', require('./auth'))
+  .use('/api', require('./data'))
   .listen(3000, () => console.log("Server started"))
 
