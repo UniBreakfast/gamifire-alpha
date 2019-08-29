@@ -1,6 +1,10 @@
+
+app.tasks = []
+
 if (localStorage.token && localStorage.name) {
   loginBtn.disabled = true
   informer.innerText = `Hi, ${localStorage.name}`
+  addEventListener('load', ()=>body.switch('tasks'))
   getTasks()
 } else {
   logoutBtn.disabled = true
@@ -22,6 +26,7 @@ loginBtn.onclick = async function(e) {
   getTasks()
   loginBtn.disabled = true
   logoutBtn.disabled = false
+  body.switch('tasks')
 }
 
 logoutBtn.onclick = function(e) {
@@ -32,6 +37,7 @@ logoutBtn.onclick = function(e) {
   loginBtn.disabled = false
   logoutBtn.disabled = true
   taskList.innerHTML = ''
+  body.switch('auth')
 }
 
 askPrivData.onclick = async function(e) {
