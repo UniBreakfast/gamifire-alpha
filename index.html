@@ -6,32 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Gamifire</title>
   <script src="able.js"></script>
-  <style>
-    table {
-      text-align: center;
-    }
-    #taskListBox {
-      border: 1px solid;
-      width: 200px;
-      height: 300px;
-      overflow: auto;
-    }
-    .task {
-      width: 200px;
-    }
-    .progress-bar {
-      border: 1px solid;
-      height: 17px;
-      width: 100px;
-    }
-    .progress {
-      background: greenyellow;
-      height: 100%;
-      width: 45%;
-      text-align: right;
-      font-weight: bold;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
+
 </head>
 <body class="switchable" data-active="auth" id=body>
   <form class="mode" data-body="auth">
@@ -42,30 +18,28 @@
     <button id="askPrivData">Ask private data</button>
     <span id="informer"></span>
   </form>
-<div class="mode" data-body="tasks">
+  <div class="mode" data-body="tasks">
     <button id="addTask">Add task</button>
     <input type="text" id="taskToAdd">
-    <div id="taskListBox">
-      <div id="taskList">
-      </div>
-    </div>
-    <table class="renderable" data-src="tasks">
-      <tr>
-        <td>
-          <div class="progress-bar"><div class="progress">{level}</div></div>
-        </td>
-        <td class="task">{task}</td>
-        <td>{mins}</td>
-        <td>
-          <button onclick="addMins(3, {id})">3</button>
-          <button onclick="addMins(9, {id})">9</button>
-          <button onclick="addMins(15, {id})">15</button>
-          <button onclick="addMins({customMins}, {id})">➤</button>
-          <input type="number">
-        </td>
-      </tr>
+    <table>
+      <tbody class="renderable" data-src="tasks" id="taskTable">
+        <tr data-id="{_id}">
+          <td>
+            <div class="progress-bar"><div class="progress">{level}</div></div>
+          </td>
+          <td class="task">{task}</td>
+          <td>{mins}</td>
+          <td>
+            <button onclick="addMins(3, {_id})">3</button>
+            <button onclick="addMins(9, {_id})">9</button>
+            <button onclick="addMins(15, {_id})">15</button>
+            <button onclick="addMins({customMins}, {_id})">➤</button>
+            <input type="number">
+          </td>
+        </tr>
+      </tbody>
     </table>
-</div>
+  </div>
 
   <script src="script.js"></script>
 

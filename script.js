@@ -1,5 +1,5 @@
-
 app.tasks = []
+// app.tasks = [{task: 'do something', level: 4, mins: 452, id: 1, customMins: 40}]
 
 if (localStorage.token && localStorage.name) {
   loginBtn.disabled = true
@@ -58,7 +58,7 @@ addTask.onclick = function() {
     },
     body: JSON.stringify({ task: taskToAdd.value })
   })
-  taskList.innerHTML += `<div class="task">${taskToAdd.value}</div>`
+  upd.tasks.push({task: taskToAdd.value, mins: 0, level: 0})
 }
 
 taskToAdd.onkeydown = e => {
@@ -66,8 +66,26 @@ taskToAdd.onkeydown = e => {
 }
 
 async function getTasks() {
-  taskList.innerHTML = (await (await fetch("http://localhost:3000/api/tasks", {
+  const tasks = await (await fetch("http://localhost:3000/api/tasks", {
     method: 'GET',
     headers: { "auth-token": localStorage.token }
-  })).json()).reduce((html, {task}) => html + `<div class="task">${task}</div>`, '')
+  })).json()
+  upd.tasks.push(... tasks) 
+}
+
+addEventListener('load', () => taskTable.render(() => 
+  taskTable.querySelectorAll('tr').forEach((tr, i, trs) => tr.onclick = e => {
+    trs.forEach(tr => tr.classList.remove('active'))
+    tr.classList.add('active')
+  })
+))
+
+onkeydown = e => {
+  if (e.key == 'Delete' && e.target == document.body) {
+    const active = taskTable.querySelector('.active')
+    if (!active) return
+    const activeId = active.dataset.id
+    upd.tasks.splice(app.tasks.indexOf(app.tasks.find(task => 
+      task._id == activeId)), 1)
+  }
 }

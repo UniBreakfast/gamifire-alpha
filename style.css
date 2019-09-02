@@ -1,0 +1,25 @@
+table {
+  text-align: center;
+}
+.task {
+  width: 200px;
+}
+.progress-bar {
+  border: 1px solid;
+  height: 17px;
+  width: 100px;
+}
+.progress {
+  background: greenyellow;
+  height: 100%;
+  width: 45%;
+  text-align: right;
+  font-weight: bold;
+}
+[type=number] {
+  width: 40px;
+}
+
+[data-src=tasks] tr.active {
+  background: cornsilk;
+}
