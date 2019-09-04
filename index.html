@@ -25,16 +25,16 @@
       <tbody class="renderable" data-src="tasks" id="taskTable">
         <tr data-id="{_id}">
           <td>
-            <div class="progress-bar"><div class="progress">{level}</div></div>
+            <div class="progress-bar"><div class="progress" style="width:{progress}%">{level}</div></div>
           </td>
           <td class="task">{task}</td>
           <td>{mins}</td>
           <td>
-            <button onclick="addMins(3, {_id})">3</button>
-            <button onclick="addMins(9, {_id})">9</button>
-            <button onclick="addMins(15, {_id})">15</button>
-            <button onclick="addMins({customMins}, {_id})">➤</button>
-            <input type="number">
+            <button onclick="addMins(3, '{_id}')">3</button>
+            <button onclick="addMins(9, '{_id}')">9</button>
+            <button onclick="addMins(15, '{_id}')">15</button>
+            <button onclick="addMins(+minInp{i}.value, '{_id}')">➤</button>
+            <input type="number" id="minInp{i}">
           </td>
         </tr>
       </tbody>

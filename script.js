@@ -1,5 +1,6 @@
 app.tasks = []
 // app.tasks = [{task: 'do something', level: 4, mins: 452, id: 1, customMins: 40}]
+const minsPerLevel = 120
 
 if (localStorage.token && localStorage.name) {
   loginBtn.disabled = true
@@ -36,7 +37,6 @@ logoutBtn.onclick = function(e) {
   setTimeout(() => informer.innerText = `And who are you?`)
   loginBtn.disabled = false
   logoutBtn.disabled = true
-  taskList.innerHTML = ''
   body.switch('auth')
 }
 
@@ -70,7 +70,8 @@ async function getTasks() {
     method: 'GET',
     headers: { "auth-token": localStorage.token }
   })).json()
-  upd.tasks.push(... tasks) 
+  upd.tasks.push(... tasks.map(task => 
+    ({...task, progress: (task.mins % minsPerLevel)*100/minsPerLevel})))
 }
 
 addEventListener('load', () => taskTable.render(() => 
@@ -87,5 +88,29 @@ onkeydown = e => {
     const activeId = active.dataset.id
     upd.tasks.splice(app.tasks.indexOf(app.tasks.find(task => 
       task._id == activeId)), 1)
+    fetch("http://localhost:3000/api/rmtask", {
+      method: 'POST',
+      headers: {
+        "auth-token": localStorage.token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ id: activeId })
+    })
   }
+}
+
+function addMins(mins, id) {
+  const task = upd.tasks.find(task => task._id == id)
+    task.mins += mins
+    task.level = Math.floor(task.mins / minsPerLevel)
+    task.progress = (task.mins % minsPerLevel)*100/minsPerLevel
+
+  fetch("http://localhost:3000/api/addmins", {
+    method: 'POST',
+    headers: {
+      "auth-token": localStorage.token,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ id, mins })
+  })
 }

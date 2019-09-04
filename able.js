@@ -1,12 +1,14 @@
-const app = { backStack: [], 
-              back() { if (app.backStack.length) app.backStack.pop()() } },
-      upd = {}
-
+const upd = {}, app = { togglables: {}, zIndex: 1, backStack: [], 
+              back() { if (app.backStack.length) app.backStack.pop()() } }
+      
 addEventListener('load', () => {
 
   document.querySelectorAll('.switchable').forEach(area => {
     var timedOnOff
     (area.switch = (mode, backable=1) => {
+      const current = area.dataset.active
+      if (mode == current && backable == 1) return
+      
       area.querySelectorAll('.mode').forEach(el => {
         const id = area.id.toLowerCase()
         if (!el.dataset[id]) return
@@ -15,16 +17,12 @@ addEventListener('load', () => {
         if (el.render) el.render()
       })
       if (backable) {
-        if (backable > 1) {
-          clearTimeout(timedOnOff)
+        if (backable > 1) clearTimeout(timedOnOff),
           timedOnOff = setTimeout(()=> area.switch('', 0), backable*1000)
-        } else {
-          const current = area.dataset.active
-          app.backStack.push(()=> {
-            area.switch(current, 0)
-            if (typeof backable == 'function') backable()
-          })
-        }
+        else app.backStack.push(()=> {
+          area.switch(current, 0)
+          if (typeof backable == 'function') backable()
+        })
       }
       area.dataset.active = mode
       if (event) event.preventDefault()
@@ -42,8 +40,10 @@ addEventListener('load', () => {
 
       if (callback) return callbacks.push(callback)
 
-      const src = Array.isArray(source)? source : 
-            Object.entries(source).map(([key, val], i) => ({key, val, i: i+1})),
+      const src = Array.isArray(source)? 
+              source.map((obj, i) => ({...obj, i: obj.i || i+1})) : 
+                Object.entries(source).map(([key, val], i) => 
+                  ({key, val, i: i+1})),
             placeValues = src.map(props => Object.entries(placeholders)
               .reduce((dic, [holder, path]) => ({...dic, [holder]: path
                 .reduce((val, prop) => val[prop], props)}), {}))
@@ -63,8 +63,22 @@ addEventListener('load', () => {
       (clearTimeout(previouslyPlanned), previouslyPlanned = setTimeout( () => 
         ( area.render(), otherAreaRender() ), 0 ), source) })
   })
-
 })
 
-document.head.appendChild(document.createElement('style'))
-  .innerText = '.mode:not(.active) { display: none !important }'
+document.head.appendChild(document.createElement('style')).innerText =
+  '.mode:not(.active), .togglable:not(.active) { display: none !important }'
+
+function toggle(...names) {
+  if (!names.every(name => name in app.togglables)) 
+    app.togglables = [...document.getElementsByClassName('togglable')]
+      .reduce((reg, el) => ({...reg, [el.dataset.tgl]: el}), {})
+  names.forEach(name => {
+    const el = app.togglables[name], elClass = el.classList
+    if (elClass.contains('modal') && !elClass.contains('active')) {
+      app.backStack.push( () => elClass.contains('active')? 
+        elClass.remove('active') : app.back() )
+      el.style.zIndex = app.zIndex++
+    }
+    elClass.toggle('active')
+  })
+}
