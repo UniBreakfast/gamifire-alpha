@@ -14,7 +14,7 @@ if (localStorage.token && localStorage.name) {
 
 loginBtn.onclick = async function(e) {
   e.preventDefault()
-  let answer = await (await fetch("http://localhost:3000/api/user/login", {
+  let answer = await (await fetch(location.href+"api/user/login", {
     method: 'POST',
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({ mail: login.value, pass: pass.value })
@@ -43,14 +43,14 @@ logoutBtn.onclick = function(e) {
 askPrivData.onclick = async function(e) {
   e.preventDefault()
   if (!localStorage.token) return console.log("denied")
-  console.log(await (await fetch("http://localhost:3000/api/user/data", {
+  console.log(await (await fetch(location.href+"api/user/data", {
     method: 'POST',
     headers: {"auth-token": localStorage.token}
   })).text())
 }
 
 addTask.onclick = function() {
-  fetch("http://localhost:3000/api/addtask", {
+  fetch(location.href+"api/addtask", {
     method: 'POST',
     headers: {
       "auth-token": localStorage.token,
@@ -66,7 +66,7 @@ taskToAdd.onkeydown = e => {
 }
 
 async function getTasks() {
-  const tasks = await (await fetch("http://localhost:3000/api/tasks", {
+  const tasks = await (await fetch(location.href+"api/tasks", {
     method: 'GET',
     headers: { "auth-token": localStorage.token }
   })).json()
@@ -88,7 +88,7 @@ onkeydown = e => {
     const activeId = active.dataset.id
     upd.tasks.splice(app.tasks.indexOf(app.tasks.find(task => 
       task._id == activeId)), 1)
-    fetch("http://localhost:3000/api/rmtask", {
+    fetch(location.href+"api/rmtask", {
       method: 'POST',
       headers: {
         "auth-token": localStorage.token,
@@ -105,7 +105,7 @@ function addMins(mins, id) {
     task.level = Math.floor(task.mins / minsPerLevel)
     task.progress = (task.mins % minsPerLevel)*100/minsPerLevel
 
-  fetch("http://localhost:3000/api/addmins", {
+  fetch(location.href+"api/addmins", {
     method: 'POST',
     headers: {
       "auth-token": localStorage.token,
