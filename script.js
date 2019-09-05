@@ -70,8 +70,8 @@ async function getTasks() {
     method: 'GET',
     headers: { "auth-token": localStorage.token }
   })).json()
-  upd.tasks.push(... tasks.map(task => 
-    ({...task, progress: (task.mins % minsPerLevel)*100/minsPerLevel})))
+  upd.tasks.push(... tasks.map(task => ({...task, 
+    progress: (task.mins % minsPerLevel)*100/minsPerLevel, custom:45})))
 }
 
 addEventListener('load', () => taskTable.render(() => 
@@ -113,4 +113,8 @@ function addMins(mins, id) {
     },
     body: JSON.stringify({ id, mins })
   })
+}
+
+function setCustom(id, mins) {
+  app.tasks.find(task => task._id == id).custom = mins
 }
