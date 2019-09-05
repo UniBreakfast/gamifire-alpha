@@ -7,21 +7,20 @@ module.exports = require('express').Router()
   .post('/addtask', async (req, res) => {
     try { 
       const user_id = jwt.verify(req.header('auth-token'), process.env.SECRET).id
-      await new Task({...req.body, user_id}).save()
-      res.send()
+      const task = await new Task({...req.body, user_id}).save()
+      res.send(task)
     } 
     catch (err) { res.send(err) } })
   .post('/rmtask', async (req, res) => {
     try { 
-      console.log(req.body)
-      jwt.verify(req.header('auth-token'), process.env.SECRET).id
-      console.log((await Task.findById(req.body.id, console.log)).remove())
+      jwt.verify(req.header('auth-token'), process.env.SECRET);
+      (await Task.findById(req.body.id)).remove()
       res.send()
     } 
     catch (err) { console.log(err) } })
   .post('/addmins', async (req, res) => {
     try { 
-      jwt.verify(req.header('auth-token'), process.env.SECRET).id
+      jwt.verify(req.header('auth-token'), process.env.SECRET)
       const doc = (await Task.findById(req.body.id))
       doc.mins = +req.body.mins + doc.mins
       doc.level = Math.floor(doc.mins / minsPerLevel)

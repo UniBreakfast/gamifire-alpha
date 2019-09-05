@@ -49,16 +49,16 @@ askPrivData.onclick = async function(e) {
   })).text())
 }
 
-addTask.onclick = function() {
-  fetch(location.href+"api/addtask", {
+addTask.onclick = async function() {
+  const {_id} = await (await fetch(location.href+"api/addtask", {
     method: 'POST',
     headers: {
       "auth-token": localStorage.token,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ task: taskToAdd.value })
-  })
-  upd.tasks.push({task: taskToAdd.value, mins: 0, level: 0})
+  })).json()
+  upd.tasks.push({task: taskToAdd.value, mins: 0, level: 0, _id})
 }
 
 taskToAdd.onkeydown = e => {
