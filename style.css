@@ -12,9 +12,13 @@ table {
 .progress {
   background: greenyellow;
   height: 100%;
-  width: 45%;
+  width: 0;
   text-align: right;
   font-weight: bold;
+}
+.mins {
+  width: 45px;
+  text-align: center;
 }
 [type=number] {
   width: 40px;
