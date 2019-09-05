@@ -10,5 +10,5 @@ express().use(require('body-parser').json())
   .use(require('body-parser').urlencoded( {extended: true} ))
   .use('/api/user', require('./auth'))
   .use('/api', require('./data'))
-  .listen(3000, () => console.log("Server started"))
+  .listen(process.env.PORT||3000, () => console.log("Server started"))
 
