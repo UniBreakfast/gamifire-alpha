@@ -13,11 +13,12 @@ module.exports = require('express').Router()
     catch (err) { res.send(err) } })
   .post('/rmtask', async (req, res) => {
     try { 
+      console.log(req.body)
       jwt.verify(req.header('auth-token'), process.env.SECRET).id
-      (await Task.findById(req.body.id)).remove()
+      console.log((await Task.findById(req.body.id, console.log)).remove())
       res.send()
     } 
-    catch (err) { res.send(err) } })
+    catch (err) { console.log(err) } })
   .post('/addmins', async (req, res) => {
     try { 
       jwt.verify(req.header('auth-token'), process.env.SECRET).id
